@@ -53,8 +53,9 @@ The model can be downloaded via the following link:[best_model.pth](https://pan.
 
 Make sure you have the model weights file placed in the `weights/` directory:
 ```
-weights/
-└── best_model.pth
+FishPose/
+└──weights/
+   └── best_model.pth
 ```
 
 ## Usage
@@ -66,4 +67,5 @@ Run evaluation on the test set:
 python test.py 
 
 ```
+
 

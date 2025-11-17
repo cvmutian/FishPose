@@ -1,0 +1,45 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environment
+.env
+venv/
+env/
+ENV/
+
+# Model weights (keep structure but ignore large files)
+weights/*.pth
+weights/*.pt
+weights/*.ckpt
+!weights/.gitkeep
+
+# Dataset - training data should not be uploaded
+dataset/train/
+dataset/annotations/train_coco.json
+
+# Logs and outputs
+logs/
+runs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+

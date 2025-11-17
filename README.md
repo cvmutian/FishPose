@@ -37,13 +37,14 @@ The dataset can be downloaded via the following link:[FishPose_dataset](https://
 
 The dataset should be organized as follows:
 ```
-dataset/
-├── annotations/
-    └── ...
-└── train/
-    └── ...
-└── test/
-    └── ...
+FishPose/
+└── dataset/
+   ├── annotations/
+       └── ...
+   └── train/
+       └── ...
+   └── test/
+       └── ...
 ```
 
 ## Model Weights
@@ -65,3 +66,4 @@ Run evaluation on the test set:
 python test.py 
 
 ```
+

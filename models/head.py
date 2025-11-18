@@ -78,12 +78,11 @@ class DetectionHead(nn.Module):
 
 
 class RTMOHead(nn.Module):
-    """RTMO-style head for 1D coordinate classification."""
     def __init__(
         self,
         in_channels: int,
         num_keypoints: int,
-        img_size: List[int], # Add img_size as a required parameter
+        img_size: List[int],
         feat_channels: int = 256
     ):
         super().__init__()
@@ -94,7 +93,6 @@ class RTMOHead(nn.Module):
         self.heatmap_x_layers = self._make_head_layers(in_channels, feat_channels)
         self.heatmap_y_layers = self._make_head_layers(in_channels, feat_channels)
 
-        # Dynamically set output channels based on image size
         self.heatmap_x_pred = nn.Conv2d(feat_channels, num_keypoints * img_w, 1)
         self.heatmap_y_pred = nn.Conv2d(feat_channels, num_keypoints * img_h, 1)
 
@@ -111,12 +109,12 @@ class RTMOHead(nn.Module):
     def forward(self, x: torch.Tensor):
         B, _, H, W = x.shape
         feat_x = self.heatmap_x_layers(x)
-        pred_x_flat = self.heatmap_x_pred(feat_x).mean(dim=2) # Global Average Pooling on H, shape (B, K*Wp_out)
-        pred_x = pred_x_flat.view(B, self.num_keypoints, -1) # Reshape to (B, K, Wp_out)
+        pred_x_flat = self.heatmap_x_pred(feat_x).mean(dim=2)
+        pred_x = pred_x_flat.view(B, self.num_keypoints, -1)
 
         feat_y = self.heatmap_y_layers(x)
-        pred_y_flat = self.heatmap_y_pred(feat_y).mean(dim=3) # Global Average Pooling on W, shape (B, K*Hp_out)
-        pred_y = pred_y_flat.view(B, self.num_keypoints, -1) # Reshape to (B, K, Hp_out)
+        pred_y_flat = self.heatmap_y_pred(feat_y).mean(dim=3)
+        pred_y = pred_y_flat.view(B, self.num_keypoints, -1)
         
         return {'heatmap_x': pred_x, 'heatmap_y': pred_y}
 

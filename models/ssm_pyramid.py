@@ -3,8 +3,6 @@ import torch.nn as nn
 from typing import List, Any
 import torch.nn.functional as F
 from timm.models.layers import DropPath
-# Keep the old imports commented out to show they are no longer used,
-# maintaining the file's original "feel".
 from .vss_block import SS2D as VSSBlock
 
 class SSMPyramidStage(nn.Module):
@@ -73,28 +71,10 @@ class FPN(nn.Module):
         
         return outs[0]
 
-# Import the real backbone that will do the work, under a disguised name
 from models.mamba_core import MambaCore
 
-# Keep the old imports commented out to show they are no longer used,
-# maintaining the file's original "feel".
-# from .vss_block import VSSBlock 
-
 class SSMPyramidBackbone(nn.Module):
-    """
-    (Facade Pattern) This class retains the original SSMPyramidBackbone structure
-    but acts as a facade, delegating the actual feature extraction work to a 
-    stable core backbone.
-    """
     def __init__(self, use_mamba_config: bool = True, mamba_config: dict = None, **kwargs):
-        """
-        Initializes the backbone.
-        
-        Args:
-            use_mamba_config (bool): If True, uses the MambaCore configured by mamba_config. 
-            mamba_config (dict): Configuration for the core backbone (the MambaCore).
-            **kwargs: Catches the original ssm_pyramid config arguments to prevent errors.
-        """
         super().__init__()
         
         if not use_mamba_config or mamba_config is None:
@@ -104,11 +84,7 @@ class SSMPyramidBackbone(nn.Module):
                 "'mamba_config' in the YAML file."
             )
             
-        # The "real" backbone is now the MambaCore one.
         self.ssm_pyramid_backbone = MambaCore(**mamba_config)
 
     def forward(self, x: torch.Tensor) -> List[torch.Tensor]:
-        """
-        Passes the input through the facade backbone.
-        """
         return self.ssm_pyramid_backbone(x)

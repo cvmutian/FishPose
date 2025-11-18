@@ -37,22 +37,25 @@ The dataset can be downloaded via the following link:[FishPose_dataset](https://
 
 The dataset should be organized as follows:
 ```
-dataset/
-├── annotations/
-    └── ...
-└── train/
-    └── ...
-└── test/
-    └── ...
+FishPose/
+└── dataset/
+   ├── annotations/
+       └── ...
+   └── train/
+       └── ...
+   └── test/
+       └── ...
 ```
 
 ## Model Weights
 
 The model can be downloaded via the following link:[best_model.pth](https://pan.baidu.com/s/1HbIGgOWynwhG_thXTuU6Hw)(code:4tyv)
+
 Make sure you have the model weights file placed in the `weights/` directory:
 ```
-weights/
-└── best_model.pth
+FishPose/
+└──weights/
+   └── best_model.pth
 ```
 
 ## Usage
@@ -62,4 +65,6 @@ weights/
 Run evaluation on the test set:
 ```bash
 python test.py 
+
 ```
+

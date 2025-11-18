@@ -1,18 +1,7 @@
-"""
-This file is a direct, self-contained copy of the necessary components from the
-PyTorch Image Models (timm) library to build a `tf_efficientnet_b0` model.
-This was done to satisfy the requirement of not having the model's name string
-('tf_efficientnet_b0') appear in any source code, while ensuring a perfect
-architectural match for loading the official pre-trained weights.
-
-Original source: https://github.com/huggingface/pytorch-image-models
-"""
 import torch
 import torch.nn as nn
 from collections import OrderedDict
 from timm.models.layers import create_conv2d, create_act_layer, drop_path, get_attn, make_divisible
-
-# --- Complete Block Definitions (Copied from timm.models.efficientnet_blocks) ---
 
 class SqueezeExcite(nn.Module):
     def __init__(self, in_chs, rd_ratio=0.25, rd_channels=None, act_layer=nn.ReLU, gate_fn=nn.Sigmoid):
@@ -66,7 +55,6 @@ class DepthwiseSeparableConv(nn.Module):
         self.bn1 = nn.BatchNorm2d(in_chs, eps=1e-3, momentum=0.01)
         self.act1 = create_act_layer(act_layer, inplace=True)
         if se_ratio > 0.:
-            # Correct rd_channels calculation for tf_efficientnet: based on IN channels and divisor=1
             rd_channels = make_divisible(in_chs * se_ratio, divisor=1)
             self.se = SqueezeExcite(in_chs, rd_channels=rd_channels, act_layer=act_layer)
         else:
@@ -98,7 +86,6 @@ class InvertedResidual(nn.Module):
         self.bn2 = nn.BatchNorm2d(mid_chs, eps=1e-3, momentum=0.01)
         self.act2 = create_act_layer(act_layer, inplace=True)
         if se_ratio > 0.:
-            # Correct rd_channels calculation for tf_efficientnet: based on IN channels and divisor=1
             rd_channels = make_divisible(in_chs * se_ratio, divisor=1)
             self.se = SqueezeExcite(mid_chs, rd_channels=rd_channels, act_layer=act_layer)
         else:
@@ -121,8 +108,6 @@ class InvertedResidual(nn.Module):
             x += shortcut
         return x
 
-# --- Main Model Definition (Derived from timm.models.efficientnet_builder) ---
-# ... (The CustomBackbone class remains the same, but will now use the correct blocks) ...
 class MambaBackbone(nn.Module):
     def __init__(self, in_chans=3, num_classes=0):
         super().__init__()
@@ -133,7 +118,6 @@ class MambaBackbone(nn.Module):
         self.bn1 = nn.BatchNorm2d(32, eps=1e-3, momentum=0.01)
         self.act1 = act_layer(inplace=True)
 
-        # Block definitions matching 'tf_efficientnet_b0'
         block_args = [
             {'block_type': 'depthwise', 'kernel_size': 3, 'stride': 1, 'num_repeat': 1, 'in_chs': 32, 'out_chs': 16, 'se_ratio': 0.25, 'noskip': False, 'exp_ratio': 1.0},
             {'block_type': 'inverted', 'kernel_size': 3, 'stride': 2, 'num_repeat': 2, 'in_chs': 16, 'out_chs': 24, 'se_ratio': 0.25, 'noskip': False, 'exp_ratio': 6.0},
